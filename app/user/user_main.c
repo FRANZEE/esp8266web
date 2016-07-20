@@ -72,21 +72,21 @@ extern uint32 _lit4_end[]; // addr end BSS in IRAM
  * Returns      : none
  *******************************************************************************/
 void ICACHE_FLASH_ATTR user_init(void) {
-	sys_read_cfg();
-	if(!syscfg.cfg.b.debug_print_enable) system_set_os_print(0);
-	GPIO0_MUX = VAL_MUX_GPIO0_SDK_DEF;
-	GPIO4_MUX = VAL_MUX_GPIO4_SDK_DEF;
-	GPIO5_MUX = VAL_MUX_GPIO5_SDK_DEF;
-	GPIO12_MUX = VAL_MUX_GPIO12_SDK_DEF;
-	GPIO13_MUX = VAL_MUX_GPIO13_SDK_DEF;
-	GPIO14_MUX = VAL_MUX_GPIO14_SDK_DEF;
-	GPIO15_MUX = VAL_MUX_GPIO15_SDK_DEF;
+	sys_read_cfg(); // Чтение системных настроек
+	if(!syscfg.cfg.b.debug_print_enable) system_set_os_print(0); // Вывод отладочной информации на GPIO2
+	GPIO0_MUX = VAL_MUX_GPIO0_SDK_DEF; // GPIO0, input
+	GPIO4_MUX = VAL_MUX_GPIO4_SDK_DEF; // GPIO4, input
+	GPIO5_MUX = VAL_MUX_GPIO5_SDK_DEF; // GPIO5, input
+	GPIO12_MUX = VAL_MUX_GPIO12_SDK_DEF; // GPIO12, input
+	GPIO13_MUX = VAL_MUX_GPIO13_SDK_DEF; // GPIO13, input
+	GPIO14_MUX = VAL_MUX_GPIO14_SDK_DEF; // GPIO14, input
+	GPIO15_MUX = VAL_MUX_GPIO15_SDK_DEF; // GPIO15, input
 	uarts_init();
 	system_timer_reinit();
 #if (DEBUGSOO > 0 && defined(USE_WEB))
 	os_printf("\nSimple WEB version: " WEB_SVERSION "\n");
 #endif
-	if(syscfg.cfg.b.pin_clear_cfg_enable) test_pin_clr_wifi_config();
+	if(syscfg.cfg.b.pin_clear_cfg_enable) test_pin_clr_wifi_config(); //1  0x0000002 =1 Проверять ножку RX на сброс конфигурации WiFi
 	set_cpu_clk(); // select cpu frequency 80 or 160 MHz
 #ifdef USE_GDBSTUB
 extern void gdbstub_init(void);
