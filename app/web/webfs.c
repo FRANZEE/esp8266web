@@ -171,9 +171,9 @@ void ICACHE_FLASH_ATTR WEBFSClose(WEBFS_HANDLE hWEBFS)
 	    WEBFSStubs[hWEBFS].addr = WEBFS_INVALID;
 }
 /*****************************************************************************
-  Function: uint16 WEBFSGetArray(WEBFS_HANDLE hWEBFS, uint8* cData, uint16 wLen)
-  Description: Reads a series of uint8s from a file.
-  Precondition: The file handle referenced by hWEBFS is already open.
+  Function:			uint16 WEBFSGetArray(WEBFS_HANDLE hWEBFS, uint8* cData, uint16 wLen)
+  Description:		Reads a series of uint8s from a file.
+  Precondition:		The file handle referenced by hWEBFS is already open.
   Parameters:
 	hWEBFS - the file handle from which to read
 	cData - where to store the uint8s that were read

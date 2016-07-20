@@ -17,13 +17,13 @@
 #include "webfs.h"
 
 #define CRLF "\r\n"
-#define FINI_BUF_SIZE 512
+#define FINI_BUF_SIZE 512 // FINI_BUF_SIZE
 
 struct buf_fini
 {
-	TCP_SERV_CONN ts_conn;
-	WEB_SRV_CONN web_conn;
-	uint8 buf[FINI_BUF_SIZE+1];
+	TCP_SERV_CONN ts_conn; // задается структура tcp соединения
+	WEB_SRV_CONN web_conn; // задается структура web
+	uint8 buf[FINI_BUF_SIZE+1]; // 512+1
 };
 
 /******************************************************************************
@@ -36,19 +36,20 @@ LOCAL uint16 ICACHE_FLASH_ATTR find_crlf(uint8 * chrbuf, uint16 len) {
   return len;
 }
 /******************************************************************************
+ * Инилизация настроек веб-сервера?
 *******************************************************************************/
 void ICACHE_FLASH_ATTR web_fini(const uint8 * fname)
 {
-	struct buf_fini *p = (struct buf_fini *) os_zalloc(sizeof(struct buf_fini));
+	struct buf_fini *p = (struct buf_fini *) os_zalloc(sizeof(struct buf_fini)); // выделяем память под структуры
 	if(p == NULL) {
 #if DEBUGSOO > 1
 		os_printf("Error mem!\n");
 #endif
 		return;
 	}
-	TCP_SERV_CONN * ts_conn = &p->ts_conn;
-	WEB_SRV_CONN * web_conn = &p->web_conn;
-	web_conn->bffiles[0] = WEBFS_INVALID_HANDLE;
+	TCP_SERV_CONN * ts_conn = &p->ts_conn; // копируем дефолтные значения в созданную структуру
+	WEB_SRV_CONN * web_conn = &p->web_conn;// копируем дефолтные значения в созданную структуру
+	web_conn->bffiles[0] = WEBFS_INVALID_HANDLE; // зачем?
 	web_conn->bffiles[1] = WEBFS_INVALID_HANDLE;
 	web_conn->bffiles[2] = WEBFS_INVALID_HANDLE;
 	web_conn->bffiles[3] = WEBFS_INVALID_HANDLE;
@@ -72,11 +73,11 @@ void ICACHE_FLASH_ATTR web_fini(const uint8 * fname)
 		web_inc_fclose(web_conn);
 		return;
 	}
-	user_uart_wait_tx_fifo_empty(1,1000);
+	user_uart_wait_tx_fifo_empty(1,1000); // ждем когда очистится буфер Тх
 	while(1) {
-		web_conn->msgbufsize = ts_conn->sizeo;
-		web_conn->msgbuflen = 0;
-		uint8 *pstr = web_conn->msgbuf = ts_conn->pbufo;
+		web_conn->msgbufsize = ts_conn->sizeo; // размер буфера = размер буфера передачи
+		web_conn->msgbuflen = 0; // кол-во занятых байт в буфере msgbuf
+		uint8 *pstr = web_conn->msgbuf = ts_conn->pbufo; // создаем указатель и помещаем туда = указатель на текущий буфер вывода = указатель на сегмент с передаваемыми данными
 		if(CheckSCB(SCB_RETRYCB)) { // повторный callback? да
 #if DEBUGSOO > 2
 			os_printf("rcb ");
@@ -84,7 +85,7 @@ void ICACHE_FLASH_ATTR web_fini(const uint8 * fname)
 			if(web_conn->func_web_cb != NULL) web_conn->func_web_cb(ts_conn);
 			if(CheckSCB(SCB_RETRYCB)) break; // повторить ещё раз? да.
 		}
-		uint16 len = WEBFSGetArray(web_conn->webfile, pstr, FINI_BUF_SIZE);
+		uint16 len = WEBFSGetArray(web_conn->webfile, pstr, FINI_BUF_SIZE); //читаем данные файла, возвращает число uint8 прочитанныех блоков
 #if DEBUGSOO > 3
 		os_printf("ReadF[%u]=%u\n", web_conn->webfile, len);
 #endif
@@ -102,7 +103,7 @@ void ICACHE_FLASH_ATTR web_fini(const uint8 * fname)
 #endif
 
 					if(!os_memcmp((void*)pstr, "inc:", 4)) { // "inc:file_name"
-						if(!web_inc_fopen(ts_conn, &pstr[4])) {
+						if(!web_inc_fopen(ts_conn, &pstr[4])) { // открываем файл
 #if DEBUGSOO > 1
 							os_printf("file not found!");
 #endif

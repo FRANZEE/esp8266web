@@ -38,7 +38,7 @@
 
 #ifdef USE_WEB
 extern void web_fini(const uint8 * fname);
-static const uint8 sysinifname[] ICACHE_RODATA_ATTR = "protect/init.ini";
+static const uint8 sysinifname[] ICACHE_RODATA_ATTR = "protect/init.ini"; // initialization file
 #endif
 
 void ICACHE_FLASH_ATTR init_done_cb(void)
@@ -105,7 +105,7 @@ extern void gdbstub_init(void);
 	os_printf("Set CPU CLK: %u MHz\n", ets_get_cpu_frequency());
 #endif
 	Setup_WiFi();
-	WEBFSInit(); // файловая система
+	WEBFSInit(); // init the web file system
 
 	system_deep_sleep_set_option(0);
 	system_init_done_cb(init_done_cb);

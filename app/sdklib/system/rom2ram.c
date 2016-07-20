@@ -153,7 +153,12 @@ unsigned int ICACHE_RAM_ATTR rom_strlen(const char * ps)
 		} while(xlen);
 	}
 }
-/* strcpy() из сегментов flash и IRAM */
+/* копирует строку из по новому адресу
+ * strcpy() из сегментов flash и IRAM
+ * char * pd_ - указатель куда поместить char данные
+ * void * ps - указатель откуда копируются void данные
+ * maxlen - слина копируемой строки
+ * */
 char * ICACHE_RAM_ATTR rom_strcpy(char * pd_, void * ps, unsigned int maxlen)
 {
 	if(pd_ == (0) || ps == (0) || maxlen == 0) return (0);

@@ -95,7 +95,7 @@ typedef enum
 	WEBFS_UPLOAD_HANDLE
 } WEBFS_NUM_HANDLE;
 
-// webflag:
+// webflag: // вебфлаги
 
 #define  SCB_CLOSED		0x00001 // соединение закрыто
 #define  SCB_DISCONNECT	0x00002 // выход на DISCONNECT
@@ -124,6 +124,8 @@ typedef enum
 #define  FreeSCB() web_conn->webflag = SCB_FREE
 #define  SetNextFunSCB(a) web_conn->func_web_cb = a
 #define  ClrSCB(a) web_conn->webflag &= ~(a)
+/* web_conn->webflag - флаги для http/web сервера,
+ побитовое И с параметром (а) - #define  SCB_RETRYCB	0x00080 // вызвать повтор CalBack */
 #define  CheckSCB(a) (web_conn->webflag & (a))
 
 #define  FreeSCB() web_conn->webflag = SCB_FREE
